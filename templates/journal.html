@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection - Journal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d4c74;
+            --secondary-color: #338EB6;
+            --light-color: #f5f7fa;
+            --dark-color: #333;
+            --glassmorphism-bg: rgba(255, 255, 255, 0.15);
+            --glassmorphism-border: rgba(255, 255, 255, 0.2);
+            --glassmorphism-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f5f9 0%, #c9e3f2 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Journal Page */
+        .journal-hero {
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Journal Layout */
+        .journal-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .journal-sidebar {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .journal-main {
+            flex: 2;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--glassmorphism-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glassmorphism-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px var(--glassmorphism-shadow);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Prompt card */
+        .prompt-container {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-left: 4px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .prompt-text {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin: 0 0 15px 0;
+            line-height: 1.6;
+        }
+
+        .new-prompt-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .new-prompt-btn:hover {
+            color: var(--primary-color);
+        }
+
+        /* Editor */
+        .journal-editor textarea {
+            width: 100%;
+            min-height: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .journal-editor textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(51, 142, 182, 0.2);
+        }
+
+        /* Journal entries list */
+        .entries-list {
+            list-style: none;
+        }
+
+        .entry-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .entry-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .entry-item.selected {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .entry-details {
+            flex: 1;
+        }
+
+        .entry-date {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .entry-preview {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .entry-emotion {
+            margin-left: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(13, 76, 116, 0.1);
+        }
+
+        /* Mood selector */
+        .mood-selector {
+            margin-bottom: 30px;
+        }
+
+        .mood-selector h3 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .mood-options {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 15px;
+            width: 70px;
+        }
+
+        .mood-option:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+
+        .mood-option.active {
+            opacity: 1;
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mood-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .mood-label {
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        /* Analytics section */
+        .analytics-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-card {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .analytics-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .analytics-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .journal-container {
+                flex-direction: column-reverse;
+            }
+
+            .journal-sidebar {
+                max-width: 100%;
+            }
+
+            .mood-options {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="/" class="logo">Reflection</a>
+            <nav class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/journal" class="active">Journal</a>
+                <a href="/chat">Chat</a>
+                <a href="/breathing">AR Guided Exercise</a>
+                <a href="#about">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="journal-hero">
+        <div class="container">
+            <h1 class="section-title">Your Digital Journal</h1>
+            <p class="section-subtitle">Record your thoughts and track your emotional journey with our AI-powered
+                journaling tool.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="journal-container">
+            <div class="journal-sidebar">
+                <div class="card">
+                    <h2>Past Entries</h2>
+                    <ul class="entries-list" id="entries-list">
+                        <!-- Entries will be loaded here -->
+                        <li class="entry-item">
+                            <div class="entry-details">
+                                <div class="entry-date">Loading entries...</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h2>Mood Analytics</h2>
+                    <div class="analytics-container" id="analytics-container">
+                        <div class="analytics-card">
+                            <div class="analytics-number" id="entries-count">0</div>
+                            <div class="analytics-label">Total Entries</div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-number" id="favorites-count">0</div>
+                            <div class="analytics-label">Favorites</div>
+                        </div>
+                    </div>
+                    <div id="top-emotions-container">
+                        <!-- Top emotions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="journal-main">
+                <div class="card">
+                    <h2>New Entry</h2>
+                    <div class="prompt-container">
+                        <p class="prompt-text" id="prompt-text">{{ prompt.text }}</p>
+                        <button class="new-prompt-btn" id="new-prompt-btn">
+                            <i class="fas fa-sync-alt"></i> Get another prompt
+                        </button>
+                    </div>
+
+                    <div class="journal-editor">
+                        <textarea id="journal-entry" placeholder="Start writing your thoughts here..."></textarea>
+                    </div>
+
+                    <div class="mood-selector">
+                        <h3>How are you feeling today?</h3>
+                        <div class="mood-options" id="mood-options">
+                            <div class="mood-option" data-emotion="happy">
+                                <span class="mood-emoji">😊</span>
+                                <span class="mood-label">Happy</span>
+                            </div>
+                            <div class="mood-option" data-emotion="sad">
+                                <span class="mood-emoji">😢</span>
+                                <span class="mood-label">Sad</span>
+                            </div>
+                            <div class="mood-option" data-emotion="angry">
+                                <span class="mood-emoji">😠</span>
+                                <span class="mood-label">Angry</span>
+                            </div>
+                            <div class="mood-option" data-emotion="anxious">
+                                <span class="mood-emoji">😰</span>
+                                <span class="mood-label">Anxious</span>
+                            </div>
+                            <div class="mood-option" data-emotion="neutral">
+                                <span class="mood-emoji">😐</span>
+                                <span class="mood-label">Neutral</span>
+                            </div>
+                            <div class="mood-option" data-emotion="grateful">
+                                <span class="mood-emoji">🙏</span>
+                                <span class="mood-label">Grateful</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" id="clear-btn">
+                            <i class="fas fa-eraser"></i> Clear
+                        </button>
+                        <button class="btn" id="save-btn">
+                            <i class="fas fa-save"></i> Save Entry
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="entry-viewer" style="display: none;">
+                    <h2 id="entry-date">Journal Entry</h2>
+                    <div id="entry-emotion-container"></div>
+                    <div id="entry-content"></div>
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn btn-secondary" id="back-btn">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn" id="favorite-btn">
+                            <i class="far fa-heart"></i> Add to Favorites
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3>Reflection</h3>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Features</h3>
+                <ul>
+                    <li><a href="/">AI Coach</a></li>
+                    <li><a href="/journal">Journal</a></li>
+                    <li><a href="#recommendations">Recommendations</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><a href="mailto:support@reflection.ai">Email Us</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#help">Help Center</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright container">
+            <p>&copy; 2024 Reflection. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // DOM Elements
+            const journalEntry = document.getElementById('journal-entry');
+            const promptText = document.getElementById('prompt-text');
+            const newPromptBtn = document.getElementById('new-prompt-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const entriesList = document.getElementById('entries-list');
+            const moodOptions = document.getElementById('mood-options');
+            const moodOptionsElements = document.querySelectorAll('.mood-option');
+            const entryViewer = document.getElementById('entry-viewer');
+            const entryDate = document.getElementById('entry-date');
+            const entryContent = document.getElementById('entry-content');
+            const entryEmotionContainer = document.getElementById('entry-emotion-container');
+            const backBtn = document.getElementById('back-btn');
+            const favoriteBtn = document.getElementById('favorite-btn');
+            const entriesCount = document.getElementById('entries-count');
+            const favoritesCount = document.getElementById('favorites-count');
+            const topEmotionsContainer = document.getElementById('top-emotions-container');
+
+            // Variables
+            let currentPrompt = {
+                id: "{{ prompt.id }}",
+                text: "{{ prompt.text }}"
+            };
+            let selectedEmotion = null;
+            let currentEntryId = null;
+            let currentEntryData = null;
+
+            // Initialize
+            loadJournalEntries();
+            loadAnalytics();
+
+            // Event Listeners
+            newPromptBtn.addEventListener('click', getNewPrompt);
+            saveBtn.addEventListener('click', saveEntry);
+            clearBtn.addEventListener('click', clearEntry);
+            backBtn.addEventListener('click', showNewEntryForm);
+            favoriteBtn.addEventListener('click', toggleFavorite);
+
+            // Setup mood selection
+            moodOptionsElements.forEach(option => {
+                option.addEventListener('click', function () {
+                    selectEmotion(this.getAttribute('data-emotion'));
+                });
+            });
+
+            // Functions
+            function selectEmotion(emotion) {
+                // Clear previous selections
+                moodOptionsElements.forEach(option => {
+                    option.classList.remove('active');
+                });
+
+                // Set new selection
+                document.querySelector(`.mood-option[data-emotion="${emotion}"]`).classList.add('active');
+                selectedEmotion = emotion;
+            }
+
+            function getNewPrompt() {
+                // Show loading state
+                promptText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading new prompt...';
+
+                // Get a new prompt from the server
+                fetch('/journal/prompt')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            currentPrompt = data.prompt;
+                            promptText.textContent = data.prompt.text;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error getting new prompt:', error);
+                        promptText.textContent = 'What would you like to write about today?';
+                    });
+            }
+
+            function saveEntry() {
+                // Get the text from the textarea
+                const entryText = journalEntry.value.trim();
+
+                if (!entryText) {
+                    showMessage('Please write something before saving.');
+                    return;
+                }
+
+                // Show loading state
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+
+                // Prepare data to send
+                const data = {
+                    entry_text: entryText,
+                    prompt_used: currentPrompt.text,
+                    emotion: selectedEmotion
+                };
+
+                // Send to server
+                fetch('/journal/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            showMessage('Journal entry saved successfully!');
+                            clearEntry();
+                            loadJournalEntries();
+                            loadAnalytics();
+
+                            // If no emotion was selected but one was detected
+                            if (!selectedEmotion && data.detected_emotion) {
+                                showMessage(`Your emotion was detected as: ${data.detected_emotion}`);
+                            }
+                        } else {
+                            showMessage('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error saving journal entry:', error);
+                        showMessage('Error saving journal entry. Please try again.');
+                    })
+                    .finally(() => {
+                        saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Entry';
+                        saveBtn.disabled = false;
+                    });
+            }
+
+            function clearEntry() {
+                journalEntry.value = '';
+                selectedEmotion = null;
+
+                // Remove active class from all mood options
+                moodOptionsElements.forEach(option => {
+                    option.classList.remove('active');
+                });
+            }
+
+            function loadJournalEntries() {
+                // Show loading state
+                entriesList.innerHTML = '<li class="entry-item"><div class="entry-details"><div class="entry-date">Loading entries...</div></div></li>';
+
+                // Get entries from the server
+                fetch('/journal/entries')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            if (data.entries.length === 0) {
+                                entriesList.innerHTML = '<li class="entry-item"><div class="entry-details"><div class="entry-date">No entries yet</div><div class="entry-preview">Start writing to see your entries here.</div></div></li>';
+                                return;
+                            }
+
+                            entriesList.innerHTML = '';
+
+                            data.entries.forEach(entry => {
+                                const date = new Date(entry.created_at);
+                                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                                const emotionEmoji = getEmotionEmoji(entry.emotion);
+
+                                const entryItem = document.createElement('li');
+                                entryItem.className = 'entry-item';
+                                entryItem.innerHTML = `
+                                            <div class="entry-details">
+                                                <div class="entry-date">${formattedDate}</div>
+                                                <div class="entry-preview">${entry.entry_text.substring(0, 50)}${entry.entry_text.length > 50 ? '...' : ''}</div>
+                                            </div>
+                                            <div class="entry-emotion">${emotionEmoji}</div>
+                                            ${entry.is_favorite ? '<span class="favorite-icon">❤️</span>' : ''}
+                                        `;
+
+                                entryItem.addEventListener('click', () => viewEntry(entry.id));
+                                entriesList.appendChild(entryItem);
+                            });
+                        } else {
+                            entriesList.innerHTML = '<li class="entry-item"><div class="entry-details"><div class="entry-date">Error loading entries</div></div></li>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading journal entries:', error);
+                        entriesList.innerHTML = '<li class="entry-item"><div class="entry-details"><div class="entry-date">Error loading entries</div></div></li>';
+                    });
+            }
+
+            function viewEntry(entryId) {
+                // Get entry details from the server
+                fetch(`/journal/entry/${entryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            currentEntryId = entryId;
+                            currentEntryData = data.entry;
+
+                            const date = new Date(data.entry.created_at);
+                            entryDate.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                            entryContent.innerHTML = `<p>${data.entry.entry_text.replace(/\n/g, '<br>')}</p>`;
+
+                            // Display emotion
+                            const emotionEmoji = getEmotionEmoji(data.entry.emotion);
+                            entryEmotionContainer.innerHTML = `
+                                        <div class="mood-option active" style="width: auto; margin: 0 0 20px 0; padding: 5px 15px;">
+                                            <span class="mood-emoji">${emotionEmoji}</span>
+                                            <span class="mood-label">${data.entry.emotion ? data.entry.emotion.charAt(0).toUpperCase() + data.entry.emotion.slice(1) : 'No emotion'}</span>
+                                        </div>
+                                    `;
+
+                            // Set favorite button state
+                            if (data.entry.is_favorite) {
+                                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+                            } else {
+                                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+                            }
+
+                            // Hide the journal form and show the entry viewer
+                            document.querySelector('.journal-main > .card:first-child').style.display = 'none';
+                            entryViewer.style.display = 'block';
+                        } else {
+                            showMessage('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error viewing journal entry:', error);
+                        showMessage('Error loading journal entry. Please try again.');
+                    });
+            }
+
+            function showNewEntryForm() {
+                document.querySelector('.journal-main > .card:first-child').style.display = 'block';
+                entryViewer.style.display = 'none';
+                currentEntryId = null;
+                currentEntryData = null;
+            }
+
+            function toggleFavorite() {
+                if (!currentEntryId) return;
+
+                // Show loading state
+                favoriteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                favoriteBtn.disabled = true;
+
+                // Send to server
+                fetch(`/journal/favorite/${currentEntryId}`, {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Toggle favorite state locally
+                            const newFavoriteState = !currentEntryData.is_favorite;
+                            currentEntryData.is_favorite = newFavoriteState;
+
+                            // Update button
+                            if (newFavoriteState) {
+                                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+                            } else {
+                                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+                            }
+
+                            // Refresh the entries list
+                            loadJournalEntries();
+                            loadAnalytics();
+                        } else {
+                            showMessage('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error toggling favorite:', error);
+                        showMessage('Error updating favorite status. Please try again.');
+                    })
+                    .finally(() => {
+                        favoriteBtn.disabled = false;
+                    });
+            }
+
+            function loadAnalytics() {
+                fetch('/journal/analytics')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Update entry count
+                            entriesCount.textContent = data.analytics.entry_count;
+
+                            // Update favorites count
+                            favoritesCount.textContent = data.analytics.favorite_count;
+
+                            // Update top emotions
+                            updateTopEmotions(data.analytics.top_emotions);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading analytics:', error);
+                    });
+            }
+
+            function updateTopEmotions(topEmotions) {
+                if (!topEmotions || topEmotions.length === 0) {
+                    topEmotionsContainer.innerHTML = '<p class="text-muted">No emotions recorded yet.</p>';
+                    return;
+                }
+
+                let html = '<div class="top-emotions">';
+
+                topEmotions.forEach(emotion => {
+                    const emotionEmoji = getEmotionEmoji(emotion.emotion);
+                    html += `
+                                <div class="top-emotion-item">
+                                    <span class="emotion-emoji">${emotionEmoji}</span>
+                                    <span class="emotion-name">${emotion.emotion}</span>
+                                    <span class="emotion-count">${emotion.count}x</span>
+                                </div>
+                            `;
+                });
+
+                html += '</div>';
+                topEmotionsContainer.innerHTML = html;
+            }
+
+            function getEmotionEmoji(emotion) {
+                const emotionEmojis = {
+                    'happy': '😊',
+                    'sad': '😢',
+                    'angry': '😠',
+                    'anxious': '😰',
+                    'frustrated': '😤',
+                    'confused': '😕',
+                    'hopeful': '🙂',
+                    'grateful': '🙏',
+                    'lonely': '😔',
+                    'overwhelmed': '😩',
+                    'excited': '😃',
+                    'calm': '😌',
+                    'nervous': '😬',
+                    'proud': '😊',
+                    'disappointed': '😞',
+                    'neutral': '😐',
+                    'worried': '😟',
+                    'stressed': '😖',
+                    'relaxed': '😌',
+                    'content': '😊'
+                };
+
+                return emotionEmojis[emotion] || '😐';
+            }
+
+            function showMessage(message) {
+                alert(message); // Simple alert for now
+            }
+        });
+    </script>
+</body>
+
+</html>

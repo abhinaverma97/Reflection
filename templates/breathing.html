@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection - AR Breathing Exercise</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .breathing-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .exercise-info {
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .exercise-steps {
+            margin: 20px 0;
+        }
+        
+        .exercise-steps li {
+            margin-bottom: 10px;
+        }
+        
+        .exercise-benefits {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .benefit-item {
+            background-color: rgba(0, 150, 200, 0.2);
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            flex-basis: calc(50% - 20px);
+        }
+        
+        .exercise-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            background-color: #006B8F;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #005673;
+        }
+        
+        .exercise-type-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .exercise-type-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            flex-basis: calc(50% - 10px);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .exercise-type-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .exercise-type-card.selected {
+            background-color: rgba(0, 150, 200, 0.3);
+            border: 2px solid #006B8F;
+        }
+        
+        .exercise-type-card h3 {
+            margin-top: 0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #006B8F;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        #video-container {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        #video-feed {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #stop-exercise-btn {
+            background-color: #d32f2f;
+        }
+        
+        #stop-exercise-btn:hover {
+            background-color: #b71c1c;
+        }
+        
+        .exercise-selection {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #exercise-details {
+            margin-top: 20px;
+        }
+        
+        .exercise-guide {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .exercise-guide h3 {
+            margin-top: 0;
+            color: white;
+        }
+        
+        .exercise-guide p {
+            margin-bottom: 0;
+            color: #e0e0e0;
+        }
+        
+        /* Header styles */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0d4c74;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-menu a {
+            color: #0d4c74;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #338EB6;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #0d4c74;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">Reflection</a>
+            <nav class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/journal">Journal</a>
+                <a href="/chat">Chat</a>
+                <a href="/breathing" class="active">AR Guided Exercise</a>
+                <a href="#about">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="breathing-container">
+        <h1>AR Guided Breathing Exercise</h1>
+        
+        <div id="exercise-selection" class="exercise-selection">
+            <div class="exercise-info">
+                <p>Use these guided breathing exercises to help manage your emotions and improve your mental state. Based on your current emotion ({{ emotion }}), we suggest the <strong>{{ recommended_exercise }}</strong> breathing pattern, but you can choose any exercise that suits your needs.</p>
+                
+                <div class="exercise-type-container">
+                    {% for type, description in exercise_types.items() %}
+                    <div class="exercise-type-card {% if type == recommended_exercise %}selected{% endif %}" data-type="{{ type }}">
+                        <h3>{{ type|capitalize }} Breathing</h3>
+                        <p>{{ description }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div id="exercise-details">
+                <h2>{{ exercise_info.name }}</h2>
+                <p>{{ exercise_info.description }}</p>
+                
+                <h3>How to perform this exercise:</h3>
+                <ul class="exercise-steps">
+                    {% for step in exercise_info.steps %}
+                    <li>{{ step }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h3>Benefits:</h3>
+                <div class="exercise-benefits">
+                    {% for benefit in exercise_info.benefits %}
+                    <div class="benefit-item">{{ benefit }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="exercise-buttons">
+                    <button id="start-exercise-btn" class="button">Start Guided Breathing Exercise</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="video-container">
+            <div class="exercise-guide">
+                <h3>Guided Exercise</h3>
+                <p>Follow the on-screen instructions. The system will track your breathing and guide you through each step.</p>
+                <p>You will see feedback if your breathing doesn't match the required pattern.</p>
+            </div>
+            
+            <img id="video-feed" src="{{ url_for('video_feed', type=recommended_exercise) }}" alt="AR Breathing Exercise">
+            
+            <div class="video-controls">
+                <button id="stop-exercise-btn" class="button">Stop Exercise</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const exerciseSelection = document.getElementById('exercise-selection');
+            const videoContainer = document.getElementById('video-container');
+            const videoFeed = document.getElementById('video-feed');
+            const startExerciseBtn = document.getElementById('start-exercise-btn');
+            const stopExerciseBtn = document.getElementById('stop-exercise-btn');
+            const exerciseCards = document.querySelectorAll('.exercise-type-card');
+            
+            // Select exercise type
+            exerciseCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    exerciseCards.forEach(c => c.classList.remove('selected'));
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Get selected exercise type
+                    const exerciseType = this.dataset.type;
+                    
+                    // Update exercise details via AJAX
+                    fetch(`/breathing/info?type=${exerciseType}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Update the exercise details section
+                            const detailsContainer = document.getElementById('exercise-details');
+                            detailsContainer.innerHTML = `
+                                <h2>${data.name}</h2>
+                                <p>${data.description}</p>
+                                
+                                <h3>How to perform this exercise:</h3>
+                                <ul class="exercise-steps">
+                                    ${data.steps.map(step => `<li>${step}</li>`).join('')}
+                                </ul>
+                                
+                                <h3>Benefits:</h3>
+                                <div class="exercise-benefits">
+                                    ${data.benefits.map(benefit => `<div class="benefit-item">${benefit}</div>`).join('')}
+                                </div>
+                                
+                                <div class="exercise-buttons">
+                                    <button id="start-exercise-btn" class="button">Start Guided Breathing Exercise</button>
+                                </div>
+                            `;
+                            
+                            // Re-add event listener to the new button
+                            document.getElementById('start-exercise-btn').addEventListener('click', startExercise);
+                        });
+                });
+            });
+            
+            // Start exercise button
+            startExerciseBtn.addEventListener('click', startExercise);
+            
+            // Stop exercise button
+            stopExerciseBtn.addEventListener('click', function() {
+                // Hide video container
+                videoContainer.style.display = 'none';
+                // Show exercise selection
+                exerciseSelection.style.display = 'block';
+            });
+            
+            function startExercise() {
+                // Get selected exercise type
+                const selectedCard = document.querySelector('.exercise-type-card.selected');
+                const exerciseType = selectedCard ? selectedCard.dataset.type : '{{ recommended_exercise }}';
+                
+                // Update video feed src
+                videoFeed.src = `{{ url_for('video_feed') }}?type=${exerciseType}`;
+                
+                // Hide exercise selection
+                exerciseSelection.style.display = 'none';
+                // Show video container
+                videoContainer.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
