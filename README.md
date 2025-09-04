@@ -1,4 +1,4 @@
-# LifeCoach AI - Your Personal AI Life Coach
+# Reflection AI - Your Personal AI Life Coach
 
 A modern glassmorphism-styled website with an integrated Google Gemini AI-powered life coach chatbot.
 
@@ -87,4 +87,5 @@ This project is open-source and available for personal and commercial use.
 
 - Google Gemini AI for powering the chatbot
 - Flask for the lightweight web framework
+
 - Glassmorphism UI trend for design inspiration 
