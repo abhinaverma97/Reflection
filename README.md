@@ -2,7 +2,7 @@
 
 A modern glassmorphism-styled website with an integrated Google Gemini AI-powered life coach chatbot.
 
-![LifeCoach AI Website](screenshots/website.png)
+
 
 ## Features
 
@@ -89,3 +89,4 @@ This project is open-source and available for personal and commercial use.
 - Flask for the lightweight web framework
 
 - Glassmorphism UI trend for design inspiration 
+
